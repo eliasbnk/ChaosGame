@@ -134,22 +134,22 @@ if (!font.loadFromFile("KOMIKAP_.ttf")) {
                 window.close();
             }
             if (event.type == Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == Mouse::Left)
-                {
-                    cout << "Mouse X: " << event.mouseButton.x << endl;
-                    cout << "Mouse Y: " << event.mouseButton.y << endl;
+{
+    if (event.mouseButton.button == Mouse::Left)
+    {
+        cout << "Mouse X: " << event.mouseButton.x << endl;
+        cout << "Mouse Y: " << event.mouseButton.y << endl;
 
-                    if (vertices.size() < 3)
-                    {
-                        vertices.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
-                    }
-                    else if (points.size() == 0)
-                    {
-                        points.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
-                    }
-                }
-            }
+        if (vertices.size() < 3)
+        {
+            vertices.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
+        }
+        else if (points.size() == 0)
+        {
+            points.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
+        }
+    }
+}
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Escape))
