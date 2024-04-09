@@ -159,22 +159,22 @@ int main()
         window.draw(instructions);
 
         // Draw vertices
-        for (int i = 0; i < vertices.size(); i++)
-        {
-            CircleShape vertex(5);
-            vertex.setFillColor(Color::Blue);
-            vertex.setPosition(vertices[i]);
-            window.draw(vertex);
-        }
+for (vector<Vector2f>::size_type i = 0; i < vertices.size(); i++)
+{
+    CircleShape vertex(5);
+    vertex.setFillColor(Color::Blue);
+    vertex.setPosition(vertices[i]);
+    window.draw(vertex);
+}
 
-        // Draw points
-        for (int i = 0; i < points.size(); i++)
-        {
-            CircleShape point(5);
-            point.setFillColor(Color::Red);
-            point.setPosition(points[i]);
-            window.draw(point);
-        }
+// Draw points
+for (vector<Vector2f>::size_type i = 0; i < points.size(); i++)
+{
+    CircleShape point(5);
+    point.setFillColor(Color::Red);
+    point.setPosition(points[i]);
+    window.draw(point);
+}
 
         window.display();
     }
