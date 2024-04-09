@@ -105,15 +105,10 @@ int main()
  RenderWindow window(vm, "Triangle Algorithm", Style::Default);
 window.setVerticalSyncEnabled(false); // Disable VSync
 
-// Font font;
-// if (!font.loadFromFile("arial.ttf")) {
-//     cerr << "Failed to load font file!" << endl;
-//     // Add fallback font or exit the program gracefully
-//     return EXIT_FAILURE;
-// }
+
 
     sf::Font font;
-if (!font.loadFromFile("arial.ttf")) {
+if (!font.loadFromFile("KOMIKAP_.ttf")) {
     // Handle error
     std::cerr << "Failed to load font file!" << std::endl;
     return EXIT_FAILURE;
