@@ -102,13 +102,15 @@ int main()
     // Create a video mode object
     VideoMode vm(800, 600);
     // Create and open a window for the game
-    RenderWindow window(vm, "Triangle Algorithm", Style::Default);
+ RenderWindow window(vm, "Triangle Algorithm", Style::Default);
+window.setVerticalSyncEnabled(false); // Disable VSync
 
-    Font font;
-    if (!font.loadFromFile("arial.ttf")) {
-        cerr << "Failed to load font file!" << endl;
-        return EXIT_FAILURE;
-    }
+Font font;
+if (!font.loadFromFile("arial.ttf")) {
+    cerr << "Failed to load font file!" << endl;
+    // Add fallback font or exit the program gracefully
+    return EXIT_FAILURE;
+}
 
     Text instructions;
     instructions.setFont(font);
