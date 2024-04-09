@@ -144,7 +144,7 @@ if (!font.loadFromFile("KOMIKAP_.ttf")) {
         {
             vertices.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
         }
-        else if (points.size() == 0)
+        else if (points.size() < 1) // Change here to check if there's fewer than 1 point (i.e., none)
         {
             points.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
         }
