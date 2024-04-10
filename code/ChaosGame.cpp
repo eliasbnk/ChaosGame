@@ -107,13 +107,14 @@ void generatePoints(vector<Vector2f>& points, const vector<Vector2f>& vertices) 
     if (vertices.size() != 3) return;
 
     // Clear existing points
-    points.clear();
+    //points.clear();
 
     // Start with the fourth point as the first vertex
-    points.push_back(vertices[3]);
+    //points.push_back(vertices[3]);
 
     // Generate more points using the midpoint displacement algorithm
-    for (size_t i = 0; i < points.size(); ++i) {
+    //for (size_t i = 0; i < points.size(); ++i) {
+    for (size_t i = 0; i < 50; ++i) {
         // Select a random vertex
         int randomVertexIndex = rand() % 3;
         Vector2f randomVertex = vertices[randomVertexIndex];
@@ -122,11 +123,11 @@ void generatePoints(vector<Vector2f>& points, const vector<Vector2f>& vertices) 
         Vector2f mid = midpoint(randomVertex, points.back());
 
         // Add a new point displaced slightly from the midpoint
-        float displacement = 10.f; // Adjust displacement factor as needed
-        float angle = (float)(rand() % 360) * 3.14159265359f / 180.f;
-        float offsetX = cos(angle) * displacement;
-        float offsetY = sin(angle) * displacement;
-        points.push_back(mid + Vector2f(offsetX, offsetY));
+        //float displacement = 10.f; // Adjust displacement factor as needed
+        //float angle = (float)(rand() % 360) * 3.14159265359f / 180.f;
+        //float offsetX = cos(angle) * displacement;
+        //float offsetY = sin(angle) * displacement;
+        points.push_back(mid); //+ Vector2f(offsetX, offsetY));
     }
 }
 
@@ -138,7 +139,7 @@ int main() {
 
     // Load font
     Font font;
-    if (!font.loadFromFile("arial.ttf")) {
+    if (!font.loadFromFile("KOMIKAP_.ttf")) {
         cerr << "Failed to load font" << endl;
         return EXIT_FAILURE;
     }
@@ -178,11 +179,15 @@ int main() {
                         clickCount++;
 
                         // Generate points for the fractal
-                        generatePoints(points, vertices);
+                        //generatePoints(points, vertices);
                     }
                 }
             }
         }
+
+        //update segment
+        generatePoints(points, vertices);
+
 
         // Draw everything
         window.clear();
