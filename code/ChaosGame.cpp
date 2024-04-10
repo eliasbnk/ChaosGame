@@ -12,7 +12,7 @@ Vector2f midpoint(const Vector2f& p1, const Vector2f& p2) {
 }
 
 void generatePoints(vector<Vector2f>& points, const vector<Vector2f>& vertices) {
-    if (vertices.size() != 3) return;
+    if (vertices.size() != 3 || points.empty()) return;
     
     for (size_t i = 0; i < 50; ++i) {
         int randomVertexIndex = rand() % 3;
@@ -47,34 +47,42 @@ int main() {
     int clickCount = 0;
 
     while (window.isOpen()) {
-        Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == Event::Closed) {
-                window.close();
-            }
-            else if (event.type == Event::MouseButtonPressed) {
-                if (event.mouseButton.button == Mouse::Left) {
-                    if (clickCount < 3) {
-                        vertices.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
-                        clickCount++;
+    Event event;
+    while (window.pollEvent(event)) {
+        if (event.type == Event::Closed) {
+            window.close();
+        }
+        else if (event.type == Event::MouseButtonPressed) {
+            if (event.mouseButton.button == Mouse::Left) {
+                if (clickCount < 3) {
+                    vertices.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
+                    clickCount++;
 
-                        if (clickCount == 3) {
-                            instructionText.setString("Click on a fourth point to start the algorithm");
-                        }
+                    if (clickCount == 3) {
+                        instructionText.setString("Click on a fourth point to start the algorithm");
                     }
-                    else if (clickCount == 3) {
-                        Vector2f startPoint(event.mouseButton.x, event.mouseButton.y);
-                        RectangleShape startShape(Vector2f(5.f, 5.f));
-                        startShape.setFillColor(Color::Green);
-                        startShape.setPosition(startPoint);
-                        window.draw(startShape);
-                        clickCount++;
-                    }
+                }
+                else if (clickCount == 3) {
+                    Vector2f startPoint(event.mouseButton.x, event.mouseButton.y);
+                    RectangleShape startShape(Vector2f(5.f, 5.f));
+                    startShape.setFillColor(Color::Green);
+                    startShape.setPosition(startPoint);
+                    window.draw(startShape);
+                    vertices.push_back(startPoint); // Add fourth point to vertices
+                    clickCount++;
+                    instructionText.setString("Generating fractal...");
+                }
+                else {
+                    // After the fourth point is placed, no more points are added on click
                 }
             }
         }
+    }
 
+    // Generate points only after the fourth point is placed
+    if (clickCount > 3) {
         generatePoints(points, vertices);
+    }
 
         window.clear();
         window.draw(instructionText);
