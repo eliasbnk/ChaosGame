@@ -1,7 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include <cmath>
+#include <cstdlib> // Include for rand() function
+#include <ctime> // Include for srand() function
 
 using namespace sf;
 using namespace std;
@@ -10,30 +11,23 @@ Vector2f midpoint(const Vector2f& p1, const Vector2f& p2) {
     return Vector2f((p1.x + p2.x) / 2.f, (p1.y + p2.y) / 2.f);
 }
 
-
 void generatePoints(vector<Vector2f>& points, const vector<Vector2f>& vertices) {
     if (vertices.size() != 3) return;
-
- 
+    
     for (size_t i = 0; i < 50; ++i) {
-      
         int randomVertexIndex = rand() % 3;
         Vector2f randomVertex = vertices[randomVertexIndex];
-
         Vector2f mid = midpoint(randomVertex, points.back());
-
-
-        points.push_back(mid); 
+        points.push_back(mid);
     }
 }
 
 int main() {
-   
+    srand(static_cast<unsigned int>(time(NULL))); // Seed for rand()
+
     VideoMode vm(800, 600);
-    
     RenderWindow window(vm, "Fractal Triangle", Style::Default);
 
-   
     Font font;
     if (!font.loadFromFile("KOMIKAP_.ttf")) {
         cerr << "Failed to load font" << endl;
@@ -53,7 +47,6 @@ int main() {
     int clickCount = 0;
 
     while (window.isOpen()) {
- 
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
@@ -70,22 +63,21 @@ int main() {
                         }
                     }
                     else if (clickCount == 3) {
-                        vertices.push_back(Vector2f(event.mouseButton.x, event.mouseButton.y));
+                        Vector2f startPoint(event.mouseButton.x, event.mouseButton.y);
+                        RectangleShape startShape(Vector2f(5.f, 5.f));
+                        startShape.setFillColor(Color::Green);
+                        startShape.setPosition(startPoint);
+                        window.draw(startShape);
                         clickCount++;
-
                     }
                 }
             }
         }
 
-
         generatePoints(points, vertices);
-
-
 
         window.clear();
         window.draw(instructionText);
-
 
         for (const auto& vertex : vertices) {
             CircleShape circle(5.f);
@@ -93,7 +85,6 @@ int main() {
             circle.setPosition(vertex);
             window.draw(circle);
         }
-
 
         for (const auto& point : points) {
             CircleShape circle(2.f);
