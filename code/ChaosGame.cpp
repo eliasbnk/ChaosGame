@@ -1,35 +1,57 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include <cstdlib>
-#include <ctime>
+#include <random>
+#include <stdexcept>
 
-using namespace sf;
-using namespace std;
 
-class ChaosGame {
-private:
-    RenderWindow window;
-    vector<Vector2f> vertices;
-    vector<Vector2f> points;
-    Font font;
-    Text instructions;
+const int WINDOW_WIDTH = 1920;
+const int WINDOW_HEIGHT = 1080;
+const int MAX_POINTS = 100000;
+const int VERTEX_RADIUS = 5;
+const int POINT_SIZE = 1;
+const int FONT_SIZE = 20;
+const sf::Color VERTEX_COLOR = sf::Color::Blue;
+const sf::Color POINT_COLOR = sf::Color::Yellow;
+const sf::Color INSTRUCTION_COLOR = sf::Color::White;
+const std::string FONT_FILE = "KOMIKAP_.ttf";
+const int NUMBER_VERTICES = 3;
+const sf::Vector2f STARTING_POSITION(20, 20);
+const std::string GAME_NAME = "Chaos Game!!";
+
+class Game {
+protected:
+    sf::RenderWindow window;
+    std::vector<sf::Vector2f> vertices;
+    std::vector<sf::Vector2f> points;
+    sf::Font font;
+    sf::Text instructions;
+    std::mt19937 randomEngine;
 
 public:
-    ChaosGame() : window(VideoMode(1920, 1080), "Chaos Game!!") {
-        if (!font.loadFromFile("KOMIKAP_.ttf")) {
-            cerr << "Failed to load font" << endl;
+    Game() : randomEngine(std::random_device()()) { 
+        try {
+            if (!font.loadFromFile(FONT_FILE)) {
+                throw std::runtime_error("Failed to load font");
+            }
+        } catch (const std::exception& e) {
+            handleException(e);
         }
+
         instructions.setFont(font);
         instructions.setString("Click on any three points on the screen to create the vertices for the triangle.");
-        instructions.setCharacterSize(20);
-        instructions.setFillColor(Color::White);
-        instructions.setPosition(20, 20);
+        instructions.setCharacterSize(FONT_SIZE);
+        instructions.setFillColor(INSTRUCTION_COLOR);
+        instructions.setPosition(STARTING_POSITION);
     }
 
-    void run() {
-        srand(time(0));
+    virtual ~Game() {}
 
+    virtual void run() {
+        if (!window.isOpen()) {
+            handleException(std::runtime_error("Failed to create window"));
+            return;
+        }
         while (window.isOpen()) {
             handleEvents();
             update();
@@ -37,69 +59,98 @@ public:
         }
     }
 
-private:
-    void handleEvents() {
-        Event event;
+protected:
+    virtual void handleEvents() = 0;
+    virtual void update() = 0;
+    virtual void draw() = 0;
+
+    void handleException(const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        window.close();
+    }
+
+    void drawVertices() {
+        for (const auto &vertex : vertices) {
+            sf::CircleShape circle(VERTEX_RADIUS);
+            circle.setFillColor(VERTEX_COLOR);
+            circle.setPosition(vertex);
+            window.draw(circle);
+        }
+    }
+
+    void drawPoints() {
+        for (const auto &point : points) {
+            sf::RectangleShape rect(sf::Vector2f(POINT_SIZE, POINT_SIZE));
+            rect.setPosition(point);
+            rect.setFillColor(POINT_COLOR);
+            window.draw(rect);
+        }
+    }
+
+    void drawMidpoints(int points_to_draw) {
+        std::uniform_int_distribution<int> distribution(0, NUMBER_VERTICES - 1);
+        for (int i = 0; i < points_to_draw; i++) {
+            int vert = distribution(randomEngine); 
+            sf::Vector2f newPoint;
+            newPoint.x = (vertices[vert].x + points.back().x) / 2;
+            newPoint.y = (vertices[vert].y + points.back().y) / 2;
+            points.push_back(newPoint);
+        }
+    }
+};
+
+class ChaosGame : public Game {
+public:
+    ChaosGame() : Game() {
+        window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), GAME_NAME);
+        if (!window.isOpen()) {
+            handleException(std::runtime_error("Failed to create window"));
+        }
+    }
+
+    void run() override {
+        Game::run();
+    }
+
+protected:
+    void handleEvents() override {
+        sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == Event::Closed)
+            if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
                 handleMouseClick(event.mouseButton.x, event.mouseButton.y);
         }
     }
 
     void handleMouseClick(float mouseX, float mouseY) {
-        if (vertices.size() < 3) {
-            vertices.push_back(Vector2f(mouseX, mouseY));
-            if (vertices.size() == 3) {
+        if (vertices.size() < NUMBER_VERTICES) {
+            vertices.push_back(sf::Vector2f(mouseX, mouseY));
+            if (vertices.size() == NUMBER_VERTICES) {
                 instructions.setString("Click on a fourth point to start the algorithm.");
             }
-        } else if (points.empty()) {
-            points.push_back(Vector2f(mouseX, mouseY));
+        } else if (points.size() < MAX_POINTS) {
+            points.push_back(sf::Vector2f(mouseX, mouseY));
         }
     }
 
-    void update() {
-        if (points.size() > 0 && points.size() < 100000) {
+    void update() override {
+        if (points.size() > 0 && points.size() < MAX_POINTS) {
             instructions.setString("Drawing Midpoints...");
-            int points_to_draw = points.size()/1+1;
-            for (int i = 0; i < points_to_draw; i++) {
-                int vert = rand() % 3;
-
-                Vector2f newPoint;
-                newPoint.x = (vertices[vert].x + points.back().x) / 2;
-                newPoint.y = (vertices[vert].y + points.back().y) / 2;
-                points.push_back(newPoint);
-            }
-            cout << points.size() << " Total points rendered\n";
+            int points_to_draw = points.size() / 2 + 1; 
+            drawMidpoints(points_to_draw);
+            std::cout << points.size() << " Total points rendered\n";
         }
-
-        if (points.size() > 100000)
-        {
+        if (points.size() >= MAX_POINTS) {
             instructions.setString("Simulation Complete!");
         }
     }
 
-    void draw() {
+    void draw() override {
         window.clear();
-
-
-        for (const auto& vertex : vertices) {
-            CircleShape circle(5);
-            circle.setFillColor(Color::Blue);
-            circle.setPosition(vertex);
-            window.draw(circle);
-        }
-
-        for (const auto& point : points) {
-            RectangleShape rect(Vector2f(1, 1));
-            rect.setPosition(point);
-            rect.setFillColor(Color::Yellow);
-            window.draw(rect);
-        }
-
+        drawVertices();
+        drawPoints();
         window.draw(instructions);
-
         window.display();
     }
 };
