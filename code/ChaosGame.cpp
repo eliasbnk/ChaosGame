@@ -16,7 +16,7 @@ private:
     Text instructions;
 
 public:
-    ChaosGame() : window(VideoMode(800, 600), "Chaos Game!!") {
+    ChaosGame() : window(VideoMode(1920, 1080), "Chaos Game!!") {
         if (!font.loadFromFile("KOMIKAP_.ttf")) {
             cerr << "Failed to load font" << endl;
         }
