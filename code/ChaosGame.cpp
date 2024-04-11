@@ -61,7 +61,9 @@ private:
 
     void update() {
         if (points.size() > 0 && points.size() < 100000) {
-            for (int i = 0; i < 100; i++) {
+            instructions.setString("Drawing Midpoints...");
+            int points_to_draw = points.size()/1+1;
+            for (int i = 0; i < points_to_draw; i++) {
                 int vert = rand() % 3;
 
                 Vector2f newPoint;
@@ -69,6 +71,12 @@ private:
                 newPoint.y = (vertices[vert].y + points.back().y) / 2;
                 points.push_back(newPoint);
             }
+            cout << points.size() << " Total points rendered\n";
+        }
+
+        if (points.size() > 100000)
+        {
+            instructions.setString("Simulation Complete!");
         }
     }
 
