@@ -137,7 +137,7 @@ protected:
     void update() override {
         if (points.size() > 0 && points.size() < MAX_POINTS) {
             instructions.setString("Drawing Midpoints...");
-            int points_to_draw = points.size() / 2 + 1; 
+            int points_to_draw = points.size() / 1 + 1; 
             drawMidpoints(points_to_draw);
             std::cout << points.size() << " Total points rendered\n";
         }
