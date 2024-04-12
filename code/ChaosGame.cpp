@@ -18,6 +18,7 @@ const std::string FONT_FILE = "KOMIKAP_.ttf";
 const int NUMBER_VERTICES = 3;
 const sf::Vector2f STARTING_POSITION(20, 20);
 const std::string GAME_NAME = "Chaos Game!!";
+const int POINT_DRAW_SPEED = 1; //lower is faster
 
 class Game {
 protected:
@@ -137,7 +138,7 @@ protected:
     void update() override {
         if (points.size() > 0 && points.size() < MAX_POINTS) {
             instructions.setString("Drawing Midpoints...");
-            int points_to_draw = points.size() / 1 + 1; 
+            int points_to_draw = points.size() / POINT_DRAW_SPEED + 1; 
             drawMidpoints(points_to_draw);
             std::cout << points.size() << " Total points rendered\n";
         }
