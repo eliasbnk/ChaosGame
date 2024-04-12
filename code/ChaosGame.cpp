@@ -7,9 +7,9 @@
 
 const int WINDOW_WIDTH = 1200;
 const int WINDOW_HEIGHT = 675;
-const int MAX_POINTS = 100000;
+const int MAX_POINTS = 40000;
 const int VERTEX_RADIUS = 5;
-const int POINT_SIZE = 1;
+const int POINT_SIZE = 2;
 const int FONT_SIZE = 20;
 const sf::Color VERTEX_COLOR = sf::Color::Blue;
 const sf::Color POINT_COLOR = sf::Color::Yellow;
@@ -18,7 +18,7 @@ const std::string FONT_FILE = "KOMIKAP_.ttf";
 const int NUMBER_VERTICES = 3;
 const sf::Vector2f STARTING_POSITION(20, 20);
 const std::string GAME_NAME = "Chaos Game!!";
-const int POINT_DRAW_SPEED = 10; //lower is faster
+const int POINT_DRAW_SPEED = 75; //lower is faster
 
 class Game {
 protected:
@@ -130,7 +130,7 @@ protected:
             if (vertices.size() == NUMBER_VERTICES) {
                 instructions.setString("Click on a fourth point\nto start the algorithm.");
             }
-        } else if (points.size() < MAX_POINTS) {
+        } else if (points.size() < 1) {
             points.push_back(sf::Vector2f(mouseX, mouseY));
         }
     }
