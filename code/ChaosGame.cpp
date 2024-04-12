@@ -5,8 +5,8 @@
 #include <stdexcept>
 
 
-const int WINDOW_WIDTH = 1920;
-const int WINDOW_HEIGHT = 1080;
+const int WINDOW_WIDTH = 1200;
+const int WINDOW_HEIGHT = 675;
 const int MAX_POINTS = 100000;
 const int VERTEX_RADIUS = 5;
 const int POINT_SIZE = 1;
@@ -18,7 +18,7 @@ const std::string FONT_FILE = "KOMIKAP_.ttf";
 const int NUMBER_VERTICES = 3;
 const sf::Vector2f STARTING_POSITION(20, 20);
 const std::string GAME_NAME = "Chaos Game!!";
-const int POINT_DRAW_SPEED = 1; //lower is faster
+const int POINT_DRAW_SPEED = 10; //lower is faster
 
 class Game {
 protected:
@@ -40,7 +40,7 @@ public:
         }
 
         instructions.setFont(font);
-        instructions.setString("Click on any three points on the screen to create the vertices for the triangle.");
+        instructions.setString("Click on any three points on the screen\nto create the vertices for the triangle.");
         instructions.setCharacterSize(FONT_SIZE);
         instructions.setFillColor(INSTRUCTION_COLOR);
         instructions.setPosition(STARTING_POSITION);
@@ -128,7 +128,7 @@ protected:
         if (vertices.size() < NUMBER_VERTICES) {
             vertices.push_back(sf::Vector2f(mouseX, mouseY));
             if (vertices.size() == NUMBER_VERTICES) {
-                instructions.setString("Click on a fourth point to start the algorithm.");
+                instructions.setString("Click on a fourth point\nto start the algorithm.");
             }
         } else if (points.size() < MAX_POINTS) {
             points.push_back(sf::Vector2f(mouseX, mouseY));
