@@ -7,6 +7,7 @@
 
 const int WINDOW_WIDTH = 1200;
 const int WINDOW_HEIGHT = 675;
+const bool CAN_RESIZE_WINDOW = false;
 const int MAX_POINTS = 40000;
 const int VERTEX_RADIUS = 5;
 const int POINT_SIZE = 2;
@@ -103,7 +104,12 @@ protected:
 class ChaosGame : public Game {
 public:
     ChaosGame() : Game() {
-        window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), GAME_NAME);
+        if (CAN_RESIZE_WINDOW) {
+            window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), GAME_NAME);
+        }
+        else {
+            window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), GAME_NAME, sf::Style::Close);
+        }
         if (!window.isOpen()) {
             handleException(std::runtime_error("Failed to create window"));
         }
