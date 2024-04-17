@@ -1,3 +1,7 @@
+// Done By: Jacob Jackman & Ilya Babenko
+// CISP 400 - Ryan Hermle
+// Project: ChaosGame - or just Sierpinski triangle drawer
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
